@@ -1,2 +1,2 @@
 # VictoryConnect-ClientJava
-VictoryConnect Client for Java. Credits to @zueschops for UDP/TCP Client Code.
+VictoryConnect Client for Java. Credits to @zeuschops for UDP/TCP Client Code.
