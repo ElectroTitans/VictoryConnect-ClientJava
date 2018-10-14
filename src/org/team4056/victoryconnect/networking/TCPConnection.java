@@ -19,7 +19,9 @@ public class TCPConnection {
 
     private Thread recieveThread;
     private Client parent;
-
+    private int reconnectTime = 100;
+    private int reconnectAttempt = 0;
+    private boolean isReconnecting = false;
     public TCPConnection(String serverIP, String serverPort, Client client){
         this.serverIP = serverIP;
         this.serverPort = serverPort;
@@ -29,7 +31,7 @@ public class TCPConnection {
     public boolean connect(){
         if(clientSocket != null){
             if(clientSocket.isConnected()){
-                disconnected();
+                disconnect();
             }
             clientSocket = null;
         }
@@ -42,19 +44,41 @@ public class TCPConnection {
             outToServer = new DataOutputStream(clientSocket.getOutputStream());
             dataReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             startListening();
-
+            isReconnecting = false;
+            reconnectAttempt = 0;
+            return true;
 
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error Connecting: " + e.getMessage());
+            attemptReconnect();
             return false;
         }
 
 
-        return false;
+
     }
 
-    public boolean disconnected(){
+    public boolean attemptReconnect(){
+        if(isReconnecting){
+            return false;
+        }
+        disconnect();
+        System.out.println("Starting Reconnection process with delay: " + reconnectTime);
+        double nextAttempt = System.currentTimeMillis() + reconnectTime;
+        boolean isConnected = false;
+        isReconnecting = true;
+        while(!isConnected){
+            if(System.currentTimeMillis() >=nextAttempt){
+                nextAttempt = System.currentTimeMillis() + reconnectTime;
+                isConnected = connect();
+                reconnectAttempt++;
+               // System.out.println("\t Reconnect Attempt #"+reconnectAttempt+" result: " + isConnected);
+            }
+        }
+        return false;
+    }
+    public boolean disconnect(){
 
         if(clientSocket == null){
             return false;
@@ -85,7 +109,8 @@ public class TCPConnection {
 
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println("Error Reading Line: " + e.getMessage());
+                    attemptReconnect();
                 }
 
             }
@@ -101,6 +126,7 @@ public class TCPConnection {
            while (clientSocket.isConnected()){
                if( System.currentTimeMillis() >= nextBeat){
                    sendPacket(new Packet(Packet.DataType.COMMAND, "server/heartbeat", new String[]{System.currentTimeMillis()+""}));
+                   nextBeat =  System.currentTimeMillis() + (interval - 50);
                }
            }
         });
@@ -110,6 +136,10 @@ public class TCPConnection {
 
 
     public boolean sendPacket(Packet toSend){
+        if(clientSocket == null){
+            System.out.println("Not Initd!");
+            return false;
+        }
         if(!clientSocket.isConnected()){
             System.out.println("Not Connected!");
             return false;

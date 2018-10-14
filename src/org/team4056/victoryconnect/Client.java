@@ -128,7 +128,7 @@ public class Client{
             commandListeners.put(command, new ArrayList<>());
         }
         commandListeners.get(command).add(commandListener);
-        sendPacket(defaultConnection, new Packet(Packet.DataType.COMMAND, "server/commmand", new String[]{command}));
+        sendPacket(defaultConnection, new Packet(Packet.DataType.COMMAND, "server/command", new String[]{command}));
     }
 
     public void callCommand(String path, Object value){
@@ -137,6 +137,10 @@ public class Client{
 
     public void callCommand(String path, Object[] values){
         sendPacket(defaultConnection, new Packet(Packet.DataType.COMMAND, path,values));
+    }
+
+    public void setTickRate(int tickRate){
+        sendPacket(defaultConnection, new Packet(Packet.DataType.COMMAND, "server/tickrate",tickRate));
     }
 
 

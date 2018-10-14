@@ -10,9 +10,6 @@ public class Test1 {
         Client vcClient = new Client("java-sender", "Java Sender");
         vcClient.EnableTCP("localhost","5000" );
 
-        while(true){
-            JOptionPane.showConfirmDialog(null, "Send Packet");
-            vcClient.callCommand("java/command", System.currentTimeMillis());
-        }
+        vcClient.callCommand("java/command", System.currentTimeMillis());
     }
 }
