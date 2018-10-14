@@ -7,6 +7,8 @@ public class Packet {
     public DataType type;
     public String path;
     public String[] data;
+    public String protocol;
+    public String raw;
 
     public Packet(DataType type, String path, String[] data){
         this.type = type;
@@ -32,6 +34,14 @@ public class Packet {
         }
 
         System.out.println("Converted: " + this.toString());
+    }
+
+    public void setProtocol(String protocol){
+        this.protocol = protocol;
+    }
+
+    public void setRaw(String raw){
+        this.raw = raw;
     }
 
 

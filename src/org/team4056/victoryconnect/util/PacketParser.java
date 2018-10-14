@@ -15,6 +15,9 @@ public class PacketParser {
     }
 
     public static Packet parseSingle(String raw){
+        if(raw.indexOf("~") < 1){
+            raw = raw.substring(raw.indexOf("~")+1);
+        }
         String[] segments = raw.split(" ");
 
         String packetTypeRaw = segments[0];
@@ -30,7 +33,8 @@ public class PacketParser {
         }else{
             dataList = new String[]{dataString};
         }
-
-        return new Packet(packetType,packetPath,dataList);
+        Packet newPacket = new Packet(packetType,packetPath,dataList);
+        newPacket.setRaw(raw);
+        return newPacket;
     }
 }

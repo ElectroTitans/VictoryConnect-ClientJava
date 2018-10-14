@@ -14,9 +14,13 @@ public class Client{
     public HashMap<String, Object> connections = new HashMap<>();
 
     public HashMap<String, List<PacketListener>> commandListeners = new HashMap<>();
+    public HashMap<String, List<PacketListener>> subscribeListeners = new HashMap<>();
+    public String defaultConnection = "TCP";
 
-    public Client(){
-        addCommandListener("server/welcome", packet -> {
+    public Client(String id, String name){
+        this.ID = id;
+        this.name = name;
+        registerCommand("server/welcome", packet -> {
             String conType = packet.data[1];
             Double hbInterval = Double.parseDouble(packet.data[2]);
             int hbRetries = Integer.parseInt(packet.data[3]);
@@ -51,7 +55,7 @@ public class Client{
     }
 
     public void SetDefaultConnection(String conType){
-
+        defaultConnection = conType;
     }
 
 
@@ -59,21 +63,15 @@ public class Client{
     public void sendPacket(String conType, Packet packet){
         Object supposedConnection = connections.get(conType);
         if(supposedConnection == null){
-            System.out.println(conType + " not registered!");
+            System.out.println(conType + " not registered! Cannot send: " + packet);
             return;
         }
         switch (conType){
             case "TCP":
+                System.out.println("Sending: " + packet.toString());
                 ((TCPConnection)supposedConnection).sendPacket(packet);
                 break;
         }
-    }
-    public void addCommandListener(String command, PacketListener commandListener){
-        if(commandListeners.get(command) == null){
-            commandListeners.put(command, new ArrayList<>());
-        }
-        commandListeners.get(command).add(commandListener);
-        System.out.println("Registering command listerning: " + command);
     }
 
     public void onPacket(Packet packet){
@@ -101,4 +99,45 @@ public class Client{
             listener.onCommand(commandPacket);
         }
     }
+
+    // Network Commands
+
+    public void newTopic(String name, String path, String protocol){
+        sendPacket(defaultConnection, new Packet(Packet.DataType.COMMAND, "server/new_topic",new String[]{name, path, protocol}));
+    }
+
+    public void setTopic(String path, Object value){
+        sendPacket(defaultConnection, new Packet(Packet.DataType.SUBMIT, path,value));
+    }
+
+    public void setTopic(String path, Object[] values){
+        sendPacket(defaultConnection, new Packet(Packet.DataType.SUBMIT, path,values));
+    }
+
+    public void subscribe(String path, PacketListener topicListener){
+
+        if(subscribeListeners.get(path) == null){
+            subscribeListeners.put(path, new ArrayList<>());
+        }
+        subscribeListeners.get(path).add(topicListener);
+        sendPacket(defaultConnection, new Packet(Packet.DataType.COMMAND, "server/subscribe", new String[]{path}));
+    }
+
+    public void registerCommand(String command, PacketListener commandListener){
+        if(commandListeners.get(command) == null){
+            commandListeners.put(command, new ArrayList<>());
+        }
+        commandListeners.get(command).add(commandListener);
+        sendPacket(defaultConnection, new Packet(Packet.DataType.COMMAND, "server/commmand", new String[]{command}));
+    }
+
+    public void callCommand(String path, Object value){
+        sendPacket(defaultConnection, new Packet(Packet.DataType.COMMAND, path,value));
+    }
+
+    public void callCommand(String path, Object[] values){
+        sendPacket(defaultConnection, new Packet(Packet.DataType.COMMAND, path,values));
+    }
+
+
 }
