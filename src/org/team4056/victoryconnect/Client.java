@@ -1,6 +1,7 @@
 package org.team4056.victoryconnect;
 
 import org.team4056.victoryconnect.listeners.PacketListener;
+import org.team4056.victoryconnect.listeners.TopicSource;
 import org.team4056.victoryconnect.networking.TCPConnection;
 import org.team4056.victoryconnect.util.Packet;
 
@@ -15,7 +16,11 @@ public class Client{
 
     public HashMap<String, List<PacketListener>> commandListeners = new HashMap<>();
     public HashMap<String, List<PacketListener>> subscribeListeners = new HashMap<>();
+    public List<TopicSource> topicSources = new ArrayList<>();
     public String defaultConnection = "TCP";
+
+    private int tickRate = 50;
+    private Thread tickThread;
 
     public Client(String id, String name){
         this.ID = id;
@@ -38,6 +43,8 @@ public class Client{
                     break;
             }
         });
+
+        startTickLoop();
     }
 
     public void EnableUDP(String ip, int port){
@@ -57,7 +64,6 @@ public class Client{
     public void SetDefaultConnection(String conType){
         defaultConnection = conType;
     }
-
 
 
     public void sendPacket(String conType, Packet packet){
@@ -80,6 +86,7 @@ public class Client{
             case ERROR:
                 break;
             case SUBMIT:
+                onSubmit(packet);
                 break;
             case REQUEST:
                 break;
@@ -89,6 +96,8 @@ public class Client{
         }
     }
 
+
+
     private void onCommand(Packet commandPacket){
         List<PacketListener> listeners = commandListeners.get(commandPacket.path);
         if(listeners == null){
@@ -97,6 +106,17 @@ public class Client{
         System.out.println("Found Listeners for command: " + commandPacket.path + " - " + listeners.size());
         for(PacketListener listener : listeners){
             listener.onCommand(commandPacket);
+        }
+    }
+
+    private void onSubmit(Packet packet){
+        List<PacketListener> listeners = subscribeListeners.get(packet.path);
+        if(listeners == null){
+            return;
+        }
+        System.out.println("Found Listeners for topic: " + packet.path + " - " + listeners.size());
+        for(PacketListener listener : listeners){
+            listener.onCommand(packet);
         }
     }
 
@@ -139,8 +159,55 @@ public class Client{
         sendPacket(defaultConnection, new Packet(Packet.DataType.COMMAND, path,values));
     }
 
+    public void addSource(TopicSource source){
+        newTopic(source.getPath(), source.getPath(), source.getConnection());
+        topicSources.add(source);
+    }
+
     public void setTickRate(int tickRate){
         sendPacket(defaultConnection, new Packet(Packet.DataType.COMMAND, "server/tickrate",tickRate));
+        this.tickRate = tickRate;
+        resetTickLoop();
+    }
+    boolean isTicking = true;
+    private void startTickLoop(){
+        isTicking = true;
+        tickThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int delay = 1000/tickRate;
+                long next = System.currentTimeMillis() + delay;
+                System.out.println("Starting Tick Loop with Delay: " + delay);
+                while(isTicking){
+                    if(System.currentTimeMillis() >= next){
+                        next = System.currentTimeMillis() + delay;
+                        onTick();
+                    }
+                }
+            }
+        });
+
+        tickThread.start();
+    }
+
+    private void onTick(){
+        System.out.println("Tick.");
+        sendTopicSources();
+    }
+
+    private void sendTopicSources(){
+        for(TopicSource source : topicSources){
+            Packet newPacket = new Packet(Packet.DataType.SUBMIT, source.getPath(), source.getData());
+            sendPacket(source.getConnection(), newPacket);
+        }
+    }
+
+
+    private void resetTickLoop(){
+        System.out.println("Reseting Tick Loop.");
+        isTicking = false;
+        tickThread = null;
+        startTickLoop();
     }
 
 
