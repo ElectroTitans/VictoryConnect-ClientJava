@@ -1,4 +1,6 @@
-package org.team4056.victoryconnect.util;
+package org.team4056.victoryconnect.networking;
+
+import org.team4056.victoryconnect.util.Consts;
 
 import javax.xml.crypto.Data;
 
@@ -7,7 +9,7 @@ public class Packet {
     public DataType type;
     public String path;
     public String[] data;
-    public String protocol;
+    public String protocol = "DEFAULT";
     public String raw;
 
     public Packet(DataType type, String path, String[] data){
@@ -36,12 +38,14 @@ public class Packet {
         System.out.println("Converted: " + this.toString());
     }
 
-    public void setProtocol(String protocol){
+    public Packet setProtocol(String protocol){
         this.protocol = protocol;
+        return this;
     }
 
-    public void setRaw(String raw){
+    public Packet setRaw(String raw){
         this.raw = raw;
+        return this;
     }
 
 

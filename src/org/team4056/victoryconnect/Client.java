@@ -3,11 +3,10 @@ package org.team4056.victoryconnect;
 import org.team4056.victoryconnect.listeners.PacketListener;
 import org.team4056.victoryconnect.listeners.TopicSource;
 import org.team4056.victoryconnect.networking.TCPConnection;
-import org.team4056.victoryconnect.util.Packet;
+import org.team4056.victoryconnect.networking.Packet;
+import org.team4056.victoryconnect.networking.UDPConnection;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Client{
     public String ID = "vc-client-java";
@@ -17,7 +16,10 @@ public class Client{
     public HashMap<String, List<PacketListener>> commandListeners = new HashMap<>();
     public HashMap<String, List<PacketListener>> subscribeListeners = new HashMap<>();
     public List<TopicSource> topicSources = new ArrayList<>();
-    public String defaultConnection = "TCP";
+    private String defaultConnection = "TCP";
+
+    private HashMap<String, Packet> packetQueue = new HashMap<>();
+    private boolean isASAP = false;
 
     private int tickRate = 50;
     private Thread tickThread;
@@ -26,9 +28,9 @@ public class Client{
         this.ID = id;
         this.name = name;
         registerCommand("server/welcome", packet -> {
-            String conType = packet.data[1];
-            Double hbInterval = Double.parseDouble(packet.data[2]);
-            int hbRetries = Integer.parseInt(packet.data[3]);
+            String conType = packet.data[0];
+            Double hbInterval = Double.parseDouble(packet.data[1]);
+            int hbRetries = Integer.parseInt(packet.data[2]);
 
             System.out.println("Heartbeat Information: \n\tConType: "+ conType +"\n\tInterval: " + hbInterval);
 
@@ -41,42 +43,89 @@ public class Client{
                 case "TCP":
                     ((TCPConnection)supposedConnection).startHeartbeat(hbInterval);
                     break;
+
+                case "UDP":
+                    ((UDPConnection)supposedConnection).startHeartbeat(hbInterval);
+                    break;
             }
         });
 
         startTickLoop();
     }
 
-    public void EnableUDP(String ip, int port){
-
-
+    public void enableUDP(String ip, String port){
+        UDPConnection udpConnection = new UDPConnection(ip,port, this);
+        udpConnection.connect();
+        udpConnection.sendPacket(new Packet(Packet.DataType.COMMAND,"server/register", new String[]{ID,name}));
+        connections.put("UDP", udpConnection);
+        this.defaultConnection = "UDP";
     }
 
-    public void EnableTCP(String ip, String port){
+    public void enableTCP(String ip, String port){
         TCPConnection tcpConnection = new TCPConnection(ip,port,this);
         tcpConnection.connect();
         tcpConnection.sendPacket(new Packet(Packet.DataType.COMMAND,"server/register", new String[]{ID,name}));
         connections.put("TCP", tcpConnection);
-
-
     }
 
-    public void SetDefaultConnection(String conType){
+    public void setDefaultConnection(String conType){
         defaultConnection = conType;
     }
 
+    public void enableASAP(){
+        isASAP = true;
+    }
 
-    public void sendPacket(String conType, Packet packet){
-        Object supposedConnection = connections.get(conType);
-        if(supposedConnection == null){
-            System.out.println(conType + " not registered! Cannot send: " + packet);
-            return;
+
+    public void sendPacket( Packet packet){
+        packetQueue.put(packet.path, packet);
+        if(isASAP){
+            sendQueue();
         }
-        switch (conType){
-            case "TCP":
-                System.out.println("Sending: " + packet.toString());
-                ((TCPConnection)supposedConnection).sendPacket(packet);
-                break;
+    }
+
+    public void sendPacket(String protocol, Packet packet){
+        packet.setProtocol(protocol);
+        sendPacket(packet);
+    }
+
+    private void sendQueue(){
+
+        Iterator<Packet> iter = packetQueue.values().iterator();
+
+        while (iter.hasNext()) {
+            Packet packet = iter.next();
+
+            String conType = packet.protocol;
+
+            if(conType == "DEFAULT"){
+                conType = defaultConnection;
+            }
+
+            Object supposedConnection = connections.get(conType);
+            if(supposedConnection == null){
+                String altCon = (String)connections.keySet().toArray()[0];
+                System.out.println(conType + " not registered! Cannot send: " + packet + " Attempting to use: " + altCon );
+                if(altCon != ""){
+                    conType = altCon;
+                    supposedConnection = connections.get(conType);
+
+                }else{
+                    return;
+                }
+
+            }
+            switch (conType) {
+                case "TCP":
+                    ((TCPConnection) supposedConnection).sendPacket(packet);
+                    break;
+                case "UDP":
+                    System.out.println("Using UDP");
+                    ((UDPConnection)supposedConnection).sendPacket(packet);
+                    break;
+            }
+            iter.remove();
+
         }
     }
 
@@ -193,11 +242,13 @@ public class Client{
     private void onTick(){
         System.out.println("Tick.");
         sendTopicSources();
+        sendQueue();
     }
 
     private void sendTopicSources(){
         for(TopicSource source : topicSources){
             Packet newPacket = new Packet(Packet.DataType.SUBMIT, source.getPath(), source.getData());
+
             sendPacket(source.getConnection(), newPacket);
         }
     }

@@ -1,12 +1,9 @@
 package org.team4056.victoryconnect.networking;
 import org.team4056.victoryconnect.Client;
-import org.team4056.victoryconnect.util.Packet;
 import org.team4056.victoryconnect.util.PacketParser;
-import sun.plugin2.main.server.HeartbeatThread;
 
 import java.io.*;
 import java.net.*;
-import java.sql.Time;
 
 public class TCPConnection {
 

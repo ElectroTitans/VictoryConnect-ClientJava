@@ -1,5 +1,7 @@
 package org.team4056.victoryconnect.util;
 
+import org.team4056.victoryconnect.networking.Packet;
+
 import java.util.ArrayList;
 import java.util.List;
 
