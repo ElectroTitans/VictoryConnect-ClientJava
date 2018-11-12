@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <resourceExtensions>
+      <entry name=".+\.(properties|xml|html|dtd|tld)" />
+      <entry name=".+\.(gif|png|jpeg|jpg)" />
+    </resourceExtensions>
+    <wildcardResourcePatterns>
+      <entry name="!?*.class" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.java" />
+    </wildcardResourcePatterns>
+    <bytecodeTargetLevel target="1.8">
+      <module name="VictoryConnect-ClientJava_main" target="1.8" />
+      <module name="VictoryConnect-ClientJava_test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="CopyrightManager" default="">
+    <module2copyright />
+  </component>
+  <component name="DependencyValidationManager">
+    <option name="SKIP_IMPORT_STATEMENTS" value="false" />
+  </component>
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+  <component name="GradleUISettings">
+    <setting name="root" />
+  </component>
+  <component name="GradleUISettings2">
+    <setting name="root" />
+  </component>
+  <component name="IdProvider" IDEtalkID="11DA1DB66DD62DDA1ED602B7079FE97C" />
+  <component name="InspectionProjectProfileManager">
+    <profile version="1.0">
+      <option name="myName" value="Project Default" />
+    </profile>
+    <version value="1.0" />
+  </component>
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" />
+    <option name="OPTION_SCOPE" value="protected" />
+    <option name="OPTION_HIERARCHY" value="true" />
+    <option name="OPTION_NAVIGATOR" value="true" />
+    <option name="OPTION_INDEX" value="true" />
+    <option name="OPTION_SEPARATE_INDEX" value="true" />
+    <option name="OPTION_DOCUMENT_TAG_USE" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_VERSION" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_DEPRECATED" value="true" />
+    <option name="OPTION_DEPRECATED_LIST" value="true" />
+    <option name="OTHER_OPTIONS" value="" />
+    <option name="HEAP_SIZE" />
+    <option name="LOCALE" />
+    <option name="OPEN_IN_BROWSER" value="true" />
+  </component>
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/VictoryConnect-ClientJava.iml" filepath="$PROJECT_DIR$/VictoryConnect-ClientJava.iml" />
+      <module fileurl="file://$PROJECT_DIR$/VictoryConnect-ClientJava_main.iml" filepath="$PROJECT_DIR$/VictoryConnect-ClientJava_main.iml" group="VictoryConnect-ClientJava" />
+      <module fileurl="file://$PROJECT_DIR$/VictoryConnect-ClientJava_test.iml" filepath="$PROJECT_DIR$/VictoryConnect-ClientJava_test.iml" group="VictoryConnect-ClientJava" />
+    </modules>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_9" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://C:/" />
+  </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/bin" vcs="Git" />
+  </component>
+  <component name="libraryTable">
+    <library name="Gradle: org.apiguardian:apiguardian-api:1.0.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apiguardian/apiguardian-api/1.0.0/3ef5276905e36f4d8055fe3cb0bdcc7503ffc85d/apiguardian-api-1.0.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Gradle: org.junit.jupiter:junit-jupiter-api:5.1.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.1.0/370218fbc7ce9cf0600c4b5db400bccdf0c01a48/junit-jupiter-api-5.1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Gradle: org.junit.jupiter:junit-jupiter-engine:5.1.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.1.0/c54b96b465bb5b49c7708d734a4180dd95422754/junit-jupiter-engine-5.1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Gradle: org.junit.platform:junit-platform-commons:1.1.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.1.0/d6aa21029f9cedfb4cc8a9e9efc0bd97987205b8/junit-platform-commons-1.1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Gradle: org.junit.platform:junit-platform-engine:1.1.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.1.0/2596bd4d909e7ea8d029272db4338075445d731b/junit-platform-engine-1.1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Gradle: org.opentest4j:opentest4j:1.0.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.0.0/6f09c598e9ff64bf0ce2fa7e7de49a99ba83c0b4/opentest4j-1.0.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <UIState>
+          <splitter-proportions>
+            <SplitterProportionsDataImpl />
+          </splitter-proportions>
+          <settings />
+        </UIState>
+      </state>
+      <state key="Copyright.UI">
+        <UIState>
+          <splitter-proportions>
+            <SplitterProportionsDataImpl />
+          </splitter-proportions>
+        </UIState>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <UIState>
+          <splitter-proportions>
+            <SplitterProportionsDataImpl>
+              <option name="proportions">
+                <list>
+                  <option value="0.2" />
+                </list>
+              </option>
+            </SplitterProportionsDataImpl>
+          </splitter-proportions>
+          <last-edited>1.6</last-edited>
+        </UIState>
+      </state>
+      <state key="ScopeChooserConfigurable.UI">
+        <UIState>
+          <splitter-proportions>
+            <SplitterProportionsDataImpl />
+          </splitter-proportions>
+          <settings />
+        </UIState>
+      </state>
+    </states>
+  </component>
+</project>

@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="SocketManager">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/SocketManager.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

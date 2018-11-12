@@ -19,6 +19,9 @@ public class TCPConnection {
     private int reconnectTime = 100;
     private int reconnectAttempt = 0;
     private boolean isReconnecting = false;
+
+
+
     public TCPConnection(String serverIP, String serverPort, Client client){
         this.serverIP = serverIP;
         this.serverPort = serverPort;
