@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/VictoryConnect-ClientJava.iml" filepath="$PROJECT_DIR$/.idea/VictoryConnect-ClientJava.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/VictoryConnect-ClientJava_main.iml" filepath="$PROJECT_DIR$/.idea/modules/VictoryConnect-ClientJava_main.iml" group="VictoryConnect-ClientJava" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/VictoryConnect-ClientJava_test.iml" filepath="$PROJECT_DIR$/.idea/modules/VictoryConnect-ClientJava_test.iml" group="VictoryConnect-ClientJava" />
     </modules>
   </component>
 </project>

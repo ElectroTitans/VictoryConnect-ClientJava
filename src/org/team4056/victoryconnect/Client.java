@@ -159,7 +159,12 @@ public class Client{
     }
 
     private void onSubmit(Packet packet){
-        List<PacketListener> listeners = subscribeListeners.get(packet.path);
+        List<PacketListener> listeners = new ArrayList<>();
+        for(String key : subscribeListeners.keySet()){
+            if(packet.path.startsWith(key) || key == packet.path || key == "*"){
+                listeners.addAll(subscribeListeners.get(key));
+            }
+        }
         if(listeners == null){
             return;
         }
@@ -240,7 +245,7 @@ public class Client{
     }
 
     private void onTick(){
-        System.out.println("Tick.");
+
         sendTopicSources();
         sendQueue();
     }

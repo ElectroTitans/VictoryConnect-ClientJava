@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Test2",
+            "request": "launch",
+            "mainClass": "src.org.team4056.victoryconnect.Test2",
+            "projectName": "VictoryConnect-ClientJava"
+        }
+    ]
+}
