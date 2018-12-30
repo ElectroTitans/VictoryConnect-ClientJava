@@ -1,10 +1,19 @@
 package com.victoryforphil.victoryconnect;
 
 import com.victoryforphil.victoryconnect.listeners.TopicSource;
+import com.victoryforphil.victoryconnect.listeners.MDNSListener;
 import com.victoryforphil.victoryconnect.listeners.PacketListener;
 import com.victoryforphil.victoryconnect.networking.TCPConnection;
 import com.victoryforphil.victoryconnect.networking.Packet;
 import com.victoryforphil.victoryconnect.networking.UDPConnection;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceEvent;
+import javax.jmdns.ServiceListener;
+
 
 import java.util.*;
 
@@ -12,10 +21,10 @@ public class Client{
     public String ID = "vc-client-java";
     public String name = "Generic VictoryConnect Java Client";
     public HashMap<String, Object> connections = new HashMap<>();
-
     public HashMap<String, List<PacketListener>> commandListeners = new HashMap<>();
     public HashMap<String, List<PacketListener>> subscribeListeners = new HashMap<>();
     public List<TopicSource> topicSources = new ArrayList<>();
+    public MDNSListener mdnsListener;
     private String defaultConnection = "TCP";
 
     private HashMap<String, Packet> packetQueue = new HashMap<>();
@@ -33,7 +42,7 @@ public class Client{
             int hbRetries = Integer.parseInt(packet.data[2]);
 
             System.out.println("Heartbeat Information: \n\tConType: "+ conType +"\n\tInterval: " + hbInterval);
-
+            
             Object supposedConnection = connections.get(conType);
             if(supposedConnection == null){
                 System.out.println(conType + " not registered!");
@@ -68,6 +77,67 @@ public class Client{
         connections.put("TCP", tcpConnection);
     }
 
+
+    public void enableMDNS(MDNSListener listener){
+        mdnsListener = listener;
+        try {
+            // Create a JmDNS instance
+            JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
+            
+            // Add a service listener
+            jmdns.addServiceListener("_vc-server._tcp.local.", new ServiceListener(){
+            
+                @Override
+                public void serviceResolved(ServiceEvent event) {
+                    if(mdnsListener != null){
+                        mdnsListener.onService("TCP", event.getInfo().getHostAddresses()[0], Integer.toString(event.getInfo().getPort()));
+                    }
+                }
+            
+                @Override
+                public void serviceRemoved(ServiceEvent event) {
+                    
+                }
+            
+                @Override
+                public void serviceAdded(ServiceEvent event) {
+                    
+                }
+            });
+
+            jmdns.addServiceListener("_vc-server._udp.local.", new ServiceListener(){
+            
+                @Override
+                public void serviceResolved(ServiceEvent event) {
+                    if(mdnsListener != null){
+                        mdnsListener.onService("UDP", event.getInfo().getHostAddresses()[0], Integer.toString(event.getInfo().getPort()));
+                    }
+                }
+            
+                @Override
+                public void serviceRemoved(ServiceEvent event) {
+                    
+                }
+            
+                @Override
+                public void serviceAdded(ServiceEvent event) {
+                    
+                }
+            });
+
+            // Wait a bit
+            try {
+                Thread.sleep(30000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } catch (UnknownHostException e) {
+            System.out.println("Err : " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Err : " +e.getMessage());
+        }
+    }
     public void setDefaultConnection(String conType){
         defaultConnection = conType;
     }
@@ -90,7 +160,7 @@ public class Client{
     }
 
     private void sendQueue(){
-
+    
         Iterator<Packet> iter = packetQueue.values().iterator();
 
         while (iter.hasNext()) {
@@ -103,7 +173,7 @@ public class Client{
             }
 
             Object supposedConnection = connections.get(conType);
-            if(supposedConnection == null){
+            if(supposedConnection == null && connections.keySet().size() > 0){
                 String altCon = (String)connections.keySet().toArray()[0];
                 System.out.println(conType + " not registered! Cannot send: " + packet + " Attempting to use: " + altCon );
                 if(altCon != ""){
@@ -114,16 +184,17 @@ public class Client{
                     return;
                 }
 
+                switch (conType) {
+                    case "TCP":
+                        ((TCPConnection) supposedConnection).sendPacket(packet);
+                        break;
+                    case "UDP":
+                        System.out.println("Using UDP");
+                        ((UDPConnection)supposedConnection).sendPacket(packet);
+                        break;
+                }
             }
-            switch (conType) {
-                case "TCP":
-                    ((TCPConnection) supposedConnection).sendPacket(packet);
-                    break;
-                case "UDP":
-                    System.out.println("Using UDP");
-                    ((UDPConnection)supposedConnection).sendPacket(packet);
-                    break;
-            }
+           
             iter.remove();
 
         }

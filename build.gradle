@@ -31,7 +31,7 @@ test {
 
 jar {
     baseName = 'vc-client'
-    version =  '0.0.2'
+    version =  '0.0.3'
 }
 
 repositories {
@@ -39,6 +39,9 @@ repositories {
 }
  
 dependencies {
+
+    implementation 'org.jmdns:jmdns:3.5.5'
+
     testImplementation(
             'org.junit.jupiter:junit-jupiter-api:5.1.0'
     )

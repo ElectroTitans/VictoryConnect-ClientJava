@@ -1,12 +1,28 @@
 package com.victoryforphil.victoryconnect;
 
+import com.victoryforphil.victoryconnect.listeners.MDNSListener;
 import com.victoryforphil.victoryconnect.listeners.PacketListener;
 import com.victoryforphil.victoryconnect.networking.Packet;
 
 public class Test2 {
     public static void main(String[] args){
         Client vcClient = new Client("java-recv", "Java Recv");
-        vcClient.enableTCP("10.0.0.17","5000" );
+        
+        vcClient.enableMDNS(new MDNSListener(){
+
+            @Override
+            public void onService(String type, String ip, String port) {
+                switch(type){
+                    case "TCP":
+                     vcClient.enableTCP(ip,port);
+                    break;
+
+                }
+            }
+            
+        });
+
+      
 
         vcClient.setTickRate(500);
         /*
