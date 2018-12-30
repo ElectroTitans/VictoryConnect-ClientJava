@@ -7,7 +7,7 @@
 
 apply plugin: 'java'
 apply plugin: 'application'
-mainClassName = 'org.team4056.victoryconnect.Test2'
+mainClassName = 'com.victoryforphil.victoryconnect.Test2'
 sourceSets {
     main {
         java {
@@ -30,8 +30,8 @@ test {
 }
 
 jar {
-    baseName = 'vc-test-client'
-    version =  '0.0.1'
+    baseName = 'vc-client'
+    version =  '0.0.2'
 }
 
 repositories {

@@ -1,8 +1,6 @@
-package org.team4056.victoryconnect.networking;
+package com.victoryforphil.victoryconnect.networking;
 
-import org.team4056.victoryconnect.util.Consts;
-
-import javax.xml.crypto.Data;
+import com.victoryforphil.victoryconnect.util.Consts;
 
 public class Packet {
     public enum DataType {ERROR, SUBMIT, REQUEST, COMMAND}

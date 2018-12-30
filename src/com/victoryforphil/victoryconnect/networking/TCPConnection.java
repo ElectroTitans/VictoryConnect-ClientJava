@@ -1,6 +1,6 @@
-package org.team4056.victoryconnect.networking;
-import org.team4056.victoryconnect.Client;
-import org.team4056.victoryconnect.util.PacketParser;
+package com.victoryforphil.victoryconnect.networking;
+import com.victoryforphil.victoryconnect.Client;
+import com.victoryforphil.victoryconnect.util.PacketParser;
 
 import java.io.*;
 import java.net.*;

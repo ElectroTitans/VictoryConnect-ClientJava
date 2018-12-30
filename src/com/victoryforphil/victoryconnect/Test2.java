@@ -1,13 +1,12 @@
-package org.team4056.victoryconnect;
+package com.victoryforphil.victoryconnect;
 
-import org.team4056.victoryconnect.listeners.PacketListener;
-import org.team4056.victoryconnect.listeners.TopicSource;
-import org.team4056.victoryconnect.networking.Packet;
+import com.victoryforphil.victoryconnect.listeners.PacketListener;
+import com.victoryforphil.victoryconnect.networking.Packet;
 
 public class Test2 {
     public static void main(String[] args){
         Client vcClient = new Client("java-recv", "Java Recv");
-        vcClient.enableTCP("localhost","5000" );
+        vcClient.enableTCP("10.0.0.17","5000" );
 
         vcClient.setTickRate(500);
         /*

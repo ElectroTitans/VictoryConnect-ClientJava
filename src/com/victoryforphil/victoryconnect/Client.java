@@ -1,10 +1,10 @@
-package org.team4056.victoryconnect;
+package com.victoryforphil.victoryconnect;
 
-import org.team4056.victoryconnect.listeners.PacketListener;
-import org.team4056.victoryconnect.listeners.TopicSource;
-import org.team4056.victoryconnect.networking.TCPConnection;
-import org.team4056.victoryconnect.networking.Packet;
-import org.team4056.victoryconnect.networking.UDPConnection;
+import com.victoryforphil.victoryconnect.listeners.TopicSource;
+import com.victoryforphil.victoryconnect.listeners.PacketListener;
+import com.victoryforphil.victoryconnect.networking.TCPConnection;
+import com.victoryforphil.victoryconnect.networking.Packet;
+import com.victoryforphil.victoryconnect.networking.UDPConnection;
 
 import java.util.*;
 

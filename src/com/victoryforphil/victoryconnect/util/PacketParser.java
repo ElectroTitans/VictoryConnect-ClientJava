@@ -1,6 +1,6 @@
-package org.team4056.victoryconnect.util;
+package com.victoryforphil.victoryconnect.util;
 
-import org.team4056.victoryconnect.networking.Packet;
+import com.victoryforphil.victoryconnect.networking.Packet;
 
 import java.util.ArrayList;
 import java.util.List;

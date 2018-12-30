@@ -1,4 +1,4 @@
-package org.team4056.victoryconnect.util;
+package com.victoryforphil.victoryconnect.util;
 
 public class Consts {
     public static class PacketType{
