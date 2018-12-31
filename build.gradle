@@ -7,7 +7,23 @@
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'maven-publish'
 mainClassName = 'com.victoryforphil.victoryconnect.Test2'
+
+group = 'victoryforphil.vc-client'
+version = '2019.1.10'
+
+publishing {
+    repositories {
+        maven {
+            name = "distLocal"
+            url = "${rootProject.buildDir}/mvnDistRepo"
+        }
+        publications.all {
+            groupId project.group
+        }
+    }
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.0'
