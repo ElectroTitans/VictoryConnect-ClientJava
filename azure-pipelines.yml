@@ -34,7 +34,7 @@ steps:
   inputs:
     gitHubConnection: victoryforphil
     repositoryName: VictoryConnect-ClientJS
-    action: 'edit' # Options: create, edit, discard
+    action: 'create' # Options: create, edit, discard
     target: '$(build.sourceVersion)' # Required when action == create || action == edit
     tagSource: 'auto' # Required when action == create. Options: auto, manual
     tag: '$(build.sourceVersion)' # Required when action == edit || action == discard || tagSource == manual
