@@ -10,10 +10,15 @@ public class Packet {
     public String protocol = "DEFAULT";
     public String raw;
 
-    public Packet(DataType type, String path, String[] data){
+    public Packet(DataType type, String path, Object[] dataObj){
         this.type = type;
         this.path = path;
-        this.data = data;
+        data = new String[dataObj.length];
+        for(int i=0;i<dataObj.length;i++){
+            data[i] = dataObj[i].toString();
+        }
+
+        System.out.println("Converted Array: " + this.toString());
     }
 
     public Packet(DataType type, String path, Object dataObj){
@@ -25,16 +30,7 @@ public class Packet {
         System.out.println("Converted: " + this.toString());
     }
 
-    public Packet(DataType type, String path, Object[] dataObj){
-        this.type = type;
-        this.path = path;
-        data = new String[dataObj.length];
-        for(int i=0;i<dataObj.length;i++){
-            data[i] = dataObj[i].toString();
-        }
-
-        System.out.println("Converted: " + this.toString());
-    }
+  
 
     public Packet setProtocol(String protocol){
         this.protocol = protocol;

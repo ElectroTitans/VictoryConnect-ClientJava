@@ -4,6 +4,7 @@ import com.victoryforphil.victoryconnect.util.PacketParser;
 
 import java.io.*;
 import java.net.*;
+import java.util.Base64;
 
 public class TCPConnection {
 
@@ -147,6 +148,7 @@ public class TCPConnection {
         String stringPacket = toSend.toString();
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+
             out.println(stringPacket);
             out.flush();
         } catch (IOException e) {

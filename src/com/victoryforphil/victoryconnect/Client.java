@@ -125,13 +125,7 @@ public class Client{
                 }
             });
 
-            // Wait a bit
-            try {
-                Thread.sleep(30000);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+           
         } catch (UnknownHostException e) {
             System.out.println("Err : " + e.getMessage());
         } catch (IOException e) {
@@ -184,6 +178,9 @@ public class Client{
                     return;
                 }
 
+               
+            }
+            if(supposedConnection != null){
                 switch (conType) {
                     case "TCP":
                         ((TCPConnection) supposedConnection).sendPacket(packet);
@@ -194,7 +191,6 @@ public class Client{
                         break;
                 }
             }
-           
             iter.remove();
 
         }
