@@ -26,3 +26,7 @@ steps:
     sourceFolder: 'build/libs'
     contents: '**/*'
     targetFolder: $(Build.ArtifactStagingDirectory)/libs
+- task: PublishBuildArtifacts@1
+  inputs:
+    artifactName: 'libs'
+    pathtoPublish: $(Build.ArtifactStagingDirectory)/libs
