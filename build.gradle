@@ -8,6 +8,10 @@
 apply plugin: 'java'
 apply plugin: 'application'
 mainClassName = 'com.victoryforphil.victoryconnect.Test2'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
 sourceSets {
     main {
         java {
