@@ -20,7 +20,7 @@ public class TCPConnection {
     private int reconnectTime = 100;
     private int reconnectAttempt = 0;
     private boolean isReconnecting = false;
-
+    private long ping = -1;
 
 
     public TCPConnection(String serverIP, String serverPort, Client client){
@@ -126,13 +126,18 @@ public class TCPConnection {
            double nextBeat =  System.currentTimeMillis() + (interval - 50);
            while (clientSocket.isConnected()){
                if( System.currentTimeMillis() >= nextBeat){
-                   sendPacket(new Packet(Packet.DataType.COMMAND, "server/heartbeat", new String[]{System.currentTimeMillis()+""}));
+                   sendPacket(new Packet(Packet.DataType.COMMAND, "server/heartbeat", new String[]{System.currentTimeMillis()+"",ping + ""}));
                    nextBeat =  System.currentTimeMillis() + (interval - 50);
                }
            }
         });
 
         heartbeatThread.start();
+    }
+
+    public void recvHeartbeat(long timestamp){
+        long currentTime = System.currentTimeMillis();
+        ping = currentTime - timestamp;
     }
 
 

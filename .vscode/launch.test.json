@@ -1,0 +1,30 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "VictoryConnect-ClientJava",
+                "projectName": "VictoryConnect-ClientJava",
+                "workingDirectory": "e:\\Programs\\FRC\\Projects\\VictoryConnect-ClientJava",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "VictoryConnect-ClientJava",
+                "projectName": "VictoryConnect-ClientJava",
+                "workingDirectory": "e:\\Programs\\FRC\\Projects\\VictoryConnect-ClientJava",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}

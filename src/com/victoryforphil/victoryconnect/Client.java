@@ -1,6 +1,7 @@
 package com.victoryforphil.victoryconnect;
 
 import com.victoryforphil.victoryconnect.listeners.TopicSource;
+import com.victoryforphil.victoryconnect.listeners.ClientListener;
 import com.victoryforphil.victoryconnect.listeners.MDNSListener;
 import com.victoryforphil.victoryconnect.listeners.PacketListener;
 import com.victoryforphil.victoryconnect.networking.TCPConnection;
@@ -25,6 +26,7 @@ public class Client{
     public HashMap<String, List<PacketListener>> subscribeListeners = new HashMap<>();
     public List<TopicSource> topicSources = new ArrayList<>();
     public MDNSListener mdnsListener;
+    private ClientListener clientListener;
     private String defaultConnection = "TCP";
 
     private HashMap<String, Packet> packetQueue = new HashMap<>();
@@ -33,9 +35,12 @@ public class Client{
     private int tickRate = 50;
     private Thread tickThread;
 
+    
+
     public Client(String id, String name){
         this.ID = id;
         this.name = name;
+        this.isASAP = true;
         registerCommand("server/welcome", packet -> {
             String conType = packet.data[0];
             Double hbInterval = Double.parseDouble(packet.data[1]);
@@ -57,9 +62,38 @@ public class Client{
                     ((UDPConnection)supposedConnection).startHeartbeat(hbInterval);
                     break;
             }
+
+            if(this.clientListener != null){
+                clientListener.ready();
+            }
         });
 
+        registerCommand("server/hearbeat_resp", packet ->{
+            long timestamp = Long.parseLong(packet.data[0]);
+            String conType = packet.data[1];
+            System.out.println(conType + " - " + timestamp);
+            Object supposedConnection = connections.get(conType);
+            if(supposedConnection == null){
+                System.out.println(conType + " not registered!");
+                return;
+            }
+            switch (conType){
+                case "TCP":
+                    ((TCPConnection)supposedConnection).recvHeartbeat(timestamp);
+                    break;
+
+                case "UDP":
+                    ((UDPConnection)supposedConnection).recvHeartbeat(timestamp);
+                    break;
+            }
+
+        });
+        this.isASAP = false;
         startTickLoop();
+    }
+
+    public void setListener(ClientListener listener){
+        this.clientListener = listener;
     }
 
     public void enableUDP(String ip, String port){

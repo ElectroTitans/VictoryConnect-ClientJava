@@ -20,7 +20,7 @@ public class UDPConnection {
 
     private byte[] receiveData = new byte[1024];
     private byte[] sendData = new byte[1024];
-
+    private long ping = -1;
     public UDPConnection(String serverIP, String serverPort, Client client){
         this.serverIP = serverIP;
         this.serverPort = serverPort;
@@ -67,7 +67,7 @@ public class UDPConnection {
            double nextBeat =  System.currentTimeMillis() + (interval - 50);
            while (clientSocket.isBound()){
                if( System.currentTimeMillis() >= nextBeat){
-                   sendPacket(new Packet(Packet.DataType.COMMAND, "server/heartbeat", new String[]{System.currentTimeMillis()+""}));
+                   sendPacket(new Packet(Packet.DataType.COMMAND, "server/heartbeat", new String[]{System.currentTimeMillis()+"", ping + ""}));
                    nextBeat =  System.currentTimeMillis() + (interval - 50);
                    System.out.println("ADAD");
                }
@@ -75,6 +75,11 @@ public class UDPConnection {
         });
 
         heartbeatThread.start();
+    }
+
+    public void recvHeartbeat(long timestamp){
+        long currentTime = System.currentTimeMillis();
+        ping = currentTime - timestamp;
     }
 
 

@@ -1,5 +1,6 @@
 package com.victoryforphil.victoryconnect;
 
+import com.victoryforphil.victoryconnect.listeners.ClientListener;
 import com.victoryforphil.victoryconnect.listeners.MDNSListener;
 import com.victoryforphil.victoryconnect.listeners.PacketListener;
 import com.victoryforphil.victoryconnect.networking.Packet;
@@ -8,6 +9,14 @@ public class Test2 {
     public static void main(String[] args){
         Client vcClient = new Client("java-recv", "Java Recv");
         
+        vcClient.setListener(new ClientListener(){
+        
+            @Override
+            public void ready() {
+                vcClient.setTickRate(500);
+            }
+        });
+
         vcClient.enableMDNS(new MDNSListener(){
 
             @Override
@@ -24,7 +33,7 @@ public class Test2 {
 
       
 
-        vcClient.setTickRate(500);
+        
         /*
         vcClient.addSource(new TopicSource() {
             @Override
