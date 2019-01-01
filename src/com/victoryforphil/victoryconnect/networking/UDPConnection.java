@@ -69,7 +69,7 @@ public class UDPConnection {
                if( System.currentTimeMillis() >= nextBeat){
                    sendPacket(new Packet(Packet.DataType.COMMAND, "server/heartbeat", new String[]{System.currentTimeMillis()+"", ping + ""}));
                    nextBeat =  System.currentTimeMillis() + (interval - 50);
-                   System.out.println("ADAD");
+                   //System.out.println("ADAD");
                }
            }
         });
@@ -85,11 +85,11 @@ public class UDPConnection {
 
     public boolean sendPacket(Packet toSend){
         if(clientSocket == null){
-            System.out.println("Not Initd!");
+            //System.out.println("Not Initd!");
             return false;
         }
         if(!clientSocket.isBound()){
-            System.out.println("Not Connected!");
+           // System.out.println("Not Connected!");
             return false;
         }
         String stringPacket = toSend.toString();
@@ -97,7 +97,7 @@ public class UDPConnection {
             sendData = stringPacket.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(serverIP), Integer.parseInt(serverPort));
             clientSocket.send(sendPacket);
-            System.out.println("UDP Send: " + stringPacket);
+            //System.out.println("UDP Send: " + stringPacket);
         } catch (IOException e) {
             e.printStackTrace();
             return false;

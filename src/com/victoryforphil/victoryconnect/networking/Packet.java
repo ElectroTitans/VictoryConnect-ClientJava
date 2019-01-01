@@ -18,7 +18,7 @@ public class Packet {
             data[i] = dataObj[i].toString();
         }
 
-        System.out.println("Converted Array: " + this.toString());
+        //System.out.println("Converted Array: " + this.toString());
     }
 
     public Packet(DataType type, String path, Object dataObj){
@@ -27,7 +27,7 @@ public class Packet {
         data = new String[1];
         data[0] = dataObj.toString();
 
-        System.out.println("Converted: " + this.toString());
+        //System.out.println("Converted: " + this.toString());
     }
 
   

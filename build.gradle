@@ -40,10 +40,13 @@ jar {
 
 repositories {
     mavenCentral()
+    flatDir {
+       dirs 'libs'
+    }
 }
  
 dependencies {
-
+    compile name: 'vc-logger-0.0.1'
     implementation 'org.jmdns:jmdns:3.5.5'
 
     testImplementation(

@@ -40,7 +40,7 @@ public class TCPConnection {
 
         try {
             clientSocket = new Socket(serverIP, Integer.parseInt(serverPort));
-            System.out.println("Connected:  " + clientSocket.isConnected());
+            //System.out.println("Connected:  " + clientSocket.isConnected());
             clientSocket.setKeepAlive(true);
             outToServer = new DataOutputStream(clientSocket.getOutputStream());
             dataReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -51,7 +51,7 @@ public class TCPConnection {
 
 
         } catch (IOException e) {
-            System.out.println("Error Connecting: " + e.getMessage());
+           // System.out.println("Error Connecting: " + e.getMessage());
             attemptReconnect();
             return false;
         }
@@ -65,7 +65,7 @@ public class TCPConnection {
             return false;
         }
         disconnect();
-        System.out.println("Starting Reconnection process with delay: " + reconnectTime);
+       // System.out.println("Starting Reconnection process with delay: " + reconnectTime);
         double nextAttempt = System.currentTimeMillis() + reconnectTime;
         boolean isConnected = false;
         isReconnecting = true;
@@ -110,7 +110,7 @@ public class TCPConnection {
 
 
                 } catch (IOException e) {
-                    System.out.println("Error Reading Line: " + e.getMessage());
+                    //System.out.println("Error Reading Line: " + e.getMessage());
                     attemptReconnect();
                 }
 
@@ -143,11 +143,11 @@ public class TCPConnection {
 
     public boolean sendPacket(Packet toSend){
         if(clientSocket == null){
-            System.out.println("Not Initd!");
+            //.println("Not Initd!");
             return false;
         }
         if(!clientSocket.isConnected()){
-            System.out.println("Not Connected!");
+           // System.out.println("Not Connected!");
             return false;
         }
         String stringPacket = toSend.toString();

@@ -1,5 +1,6 @@
 package com.victoryforphil.victoryconnect;
 
+import com.victoryforphil.logger.VictoryLogger;
 import com.victoryforphil.victoryconnect.listeners.ClientListener;
 import com.victoryforphil.victoryconnect.listeners.MDNSListener;
 import com.victoryforphil.victoryconnect.listeners.PacketListener;
@@ -7,6 +8,7 @@ import com.victoryforphil.victoryconnect.networking.Packet;
 
 public class Test2 {
     public static void main(String[] args){
+      
         Client vcClient = new Client("java-recv", "Java Recv");
         
         vcClient.setListener(new ClientListener(){

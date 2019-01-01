@@ -1,6 +1,7 @@
 package com.victoryforphil.victoryconnect;
 
 import com.victoryforphil.victoryconnect.listeners.TopicSource;
+import com.victoryforphil.logger.VictoryLogger;
 import com.victoryforphil.victoryconnect.listeners.ClientListener;
 import com.victoryforphil.victoryconnect.listeners.MDNSListener;
 import com.victoryforphil.victoryconnect.listeners.PacketListener;
@@ -41,16 +42,20 @@ public class Client{
         this.ID = id;
         this.name = name;
         this.isASAP = true;
+
+        VictoryLogger.info("Client", "constructor", "Creating new client with id: " + id + ", name:" + name);
+
         registerCommand("server/welcome", packet -> {
             String conType = packet.data[0];
             Double hbInterval = Double.parseDouble(packet.data[1]);
             int hbRetries = Integer.parseInt(packet.data[2]);
 
-            System.out.println("Heartbeat Information: \n\tConType: "+ conType +"\n\tInterval: " + hbInterval);
+            VictoryLogger.success("Client", "server/welcome", "Server welcomed " + conType + " with H/B interval: " + hbInterval);
+
             
             Object supposedConnection = connections.get(conType);
             if(supposedConnection == null){
-                System.out.println(conType + " not registered!");
+                VictoryLogger.error("Client", "server/welcome", "Server welcomed " + conType + " but that does not exist yet");
                 return;
             }
             switch (conType){
@@ -71,10 +76,12 @@ public class Client{
         registerCommand("server/hearbeat_resp", packet ->{
             long timestamp = Long.parseLong(packet.data[0]);
             String conType = packet.data[1];
-            System.out.println(conType + " - " + timestamp);
+
+            VictoryLogger.debug("Client", "server/hearbeat_resp", "Server replied " + conType + " with H/B timestamp: " + conType);
+            //System.out.println(conType + " - " + timestamp);
             Object supposedConnection = connections.get(conType);
             if(supposedConnection == null){
-                System.out.println(conType + " not registered!");
+                VictoryLogger.error("Client", "server/hearbeat_resp", "Server replied " + conType + " but that does not exist yet");
                 return;
             }
             switch (conType){
@@ -94,25 +101,32 @@ public class Client{
 
     public void setListener(ClientListener listener){
         this.clientListener = listener;
+        VictoryLogger.info("Client", "setListener", "Setting listener");
     }
 
     public void enableUDP(String ip, String port){
+        VictoryLogger.info("Client", "enableUDP", "Enabling UDP to: " + ip + ":"+port);
         UDPConnection udpConnection = new UDPConnection(ip,port, this);
         udpConnection.connect();
+        VictoryLogger.success("Client", "enableUDP", "UDP Connected! Sending register packet!");
         udpConnection.sendPacket(new Packet(Packet.DataType.COMMAND,"server/register", new String[]{ID,name}));
         connections.put("UDP", udpConnection);
-        this.defaultConnection = "UDP";
+     
+        
     }
 
     public void enableTCP(String ip, String port){
+        VictoryLogger.info("Client", "enableTCP", "Enabling TCP to: " + ip + ":"+port);
         TCPConnection tcpConnection = new TCPConnection(ip,port,this);
         tcpConnection.connect();
+        VictoryLogger.success("Client", "enableTCP", "TCP Connected! Sending register packet!");
         tcpConnection.sendPacket(new Packet(Packet.DataType.COMMAND,"server/register", new String[]{ID,name}));
         connections.put("TCP", tcpConnection);
     }
 
 
     public void enableMDNS(MDNSListener listener){
+        VictoryLogger.info("Client", "enableMDNS", "Enabling MDNS Support");
         mdnsListener = listener;
         try {
             // Create a JmDNS instance
@@ -123,7 +137,9 @@ public class Client{
             
                 @Override
                 public void serviceResolved(ServiceEvent event) {
+                    VictoryLogger.info("Client", "enableMDNS", "Found TCP service");
                     if(mdnsListener != null){
+                        
                         mdnsListener.onService("TCP", event.getInfo().getHostAddresses()[0], Integer.toString(event.getInfo().getPort()));
                     }
                 }
@@ -143,7 +159,9 @@ public class Client{
             
                 @Override
                 public void serviceResolved(ServiceEvent event) {
+                    VictoryLogger.info("Client", "enableMDNS", "Found UDP service");
                     if(mdnsListener != null){
+                        
                         mdnsListener.onService("UDP", event.getInfo().getHostAddresses()[0], Integer.toString(event.getInfo().getPort()));
                     }
                 }
@@ -161,12 +179,13 @@ public class Client{
 
            
         } catch (UnknownHostException e) {
-            System.out.println("Err : " + e.getMessage());
+            //System.out.println("Err : " + e.getMessage());
         } catch (IOException e) {
-            System.out.println("Err : " +e.getMessage());
+           // System.out.println("Err : " +e.getMessage());
         }
     }
     public void setDefaultConnection(String conType){
+        VictoryLogger.info("Client", "setDefaultConnection", "Setting default connection to: " + conType);
         defaultConnection = conType;
     }
 
@@ -177,6 +196,7 @@ public class Client{
 
     public void sendPacket( Packet packet){
         packetQueue.put(packet.path, packet);
+        VictoryLogger.debug("Client", "sendPacket", "Adding packet to queue: " + packet.path + " using " + packet.protocol);
         if(isASAP){
             sendQueue();
         }
@@ -203,12 +223,14 @@ public class Client{
             Object supposedConnection = connections.get(conType);
             if(supposedConnection == null && connections.keySet().size() > 0){
                 String altCon = (String)connections.keySet().toArray()[0];
-                System.out.println(conType + " not registered! Cannot send: " + packet + " Attempting to use: " + altCon );
+                VictoryLogger.warning("Client", "sendQueue", conType + " not registered! Cannot send: " + packet + " Attempting to use: " + altCon);
+               // System.out.println(conType + " not registered! Cannot send: " + packet + " Attempting to use: " + altCon );
                 if(altCon != ""){
                     conType = altCon;
                     supposedConnection = connections.get(conType);
 
                 }else{
+
                     return;
                 }
 
@@ -220,7 +242,7 @@ public class Client{
                         ((TCPConnection) supposedConnection).sendPacket(packet);
                         break;
                     case "UDP":
-                        System.out.println("Using UDP");
+                        
                         ((UDPConnection)supposedConnection).sendPacket(packet);
                         break;
                 }
@@ -253,7 +275,8 @@ public class Client{
         if(listeners == null){
             return;
         }
-        System.out.println("Found Listeners for command: " + commandPacket.path + " - " + listeners.size());
+        VictoryLogger.debug("Client", "onCommand", "Found Listeners for command: " + commandPacket.path + " - " + listeners.size());
+        //System.out.println("Found Listeners for command: " + commandPacket.path + " - " + listeners.size());
         for(PacketListener listener : listeners){
             listener.onCommand(commandPacket);
         }
@@ -269,7 +292,7 @@ public class Client{
         if(listeners == null){
             return;
         }
-        System.out.println("Found Listeners for topic: " + packet.path + " - " + listeners.size());
+        VictoryLogger.debug("Client", "onSubmit", "Found Listeners for command: " + packet.path + " - " + listeners.size());
         for(PacketListener listener : listeners){
             listener.onCommand(packet);
         }
@@ -332,7 +355,7 @@ public class Client{
             public void run() {
                 int delay = 1000/tickRate;
                 long next = System.currentTimeMillis() + delay;
-                System.out.println("Starting Tick Loop with Delay: " + delay);
+               // System.out.println("Starting Tick Loop with Delay: " + delay);
                 while(isTicking){
                     if(System.currentTimeMillis() >= next){
                         next = System.currentTimeMillis() + delay;
@@ -361,7 +384,7 @@ public class Client{
 
 
     private void resetTickLoop(){
-        System.out.println("Reseting Tick Loop.");
+       //System.out.println("Reseting Tick Loop.");
         isTicking = false;
         tickThread = null;
         startTickLoop();
