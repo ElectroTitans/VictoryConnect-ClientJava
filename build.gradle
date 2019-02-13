@@ -11,7 +11,8 @@ apply plugin: 'maven-publish'
 mainClassName = 'com.victoryforphil.victoryconnect.Test2'
 
 group = 'victoryforphil.vc-client'
-
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 sourceSets {
     main {
         java {
@@ -35,7 +36,7 @@ test {
 
 jar {
     baseName = 'vc-client'
-    version =  '0.0.4'
+    version =  '0.0.5'
 }
 
 repositories {
@@ -47,7 +48,7 @@ repositories {
  
 dependencies {
     compile name: 'vc-logger-0.0.1'
-    implementation 'org.jmdns:jmdns:3.5.5'
+    compile 'org.jmdns:jmdns:3.5.5'
 
     testImplementation(
             'org.junit.jupiter:junit-jupiter-api:5.1.0'

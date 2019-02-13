@@ -17,6 +17,9 @@ public class PacketParser {
     }
 
     public static Packet parseSingle(String raw){
+        if(raw == null){
+            
+        }
         if(raw.indexOf("~") < 1){
             raw = raw.substring(raw.indexOf("~")+1);
         }
